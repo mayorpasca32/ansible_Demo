@@ -1,12 +1,12 @@
 
 [Nginx-Servers]
-18.118.162.129
+3.142.98.157
 
 [Apache-Servers]
-18.222.113.130
+3.129.26.45
 
 [Database-Servers]
-3.133.139.34
+13.58.193.0
 
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
