@@ -18,7 +18,7 @@
   become: yes
   hosts: Database-Servers
   tasks:
-    - name: Installing Mysql  and dependencies
+    - name: Installing Mysql and dependencies
       package:
        name: "{{item}}"
        state: present
