@@ -4,7 +4,7 @@ pipeline{
      
       stage('Git checkout') {
             steps {
-                git branch: 'main', credentialsId: '', url: 'https://github.com/obiomaokorowu/ansible_Demo.git'
+                git branch: 'main', credentialsId: '', url: 'https://github.com/mayorpasca32/ansible_Demo.git'
             }
         }
       stage("Run an ansible playbook"){
