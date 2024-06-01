@@ -1,7 +1,7 @@
-db_user: austin
-db_pass: January123#
+db_user: labake
+db_pass: labake#
 db_name: realcloud
-http_host: 3.133.139.34
+http_host: 3.129.26.45
 http_port: 80
 http_conf: default.conf
 
