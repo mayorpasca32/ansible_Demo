@@ -1,20 +1,7 @@
 # configured aws provider with proper credentials
 provider "aws" {
   region    = "us-east-2"
-  shared_config_files      = ["/Users/austi/.aws/conf"]
-  shared_credentials_files = ["/Users/austi/.aws/credentials"]
-  profile                  = "austin"
-}
-
-# Create a remote backend for your terraform 
-terraform {
-  backend "s3" {
-    bucket = "austinobioma-docker-tfstate"
-    region = "us-east-1"
-    profile = "austin"
-    key    = "ansible-ftstate"
-
-  }
+  profile   = "labake"
 }
 
 
@@ -127,7 +114,7 @@ resource "aws_instance" "ec2_instance1" {
   instance_type          = "t2.small"
   subnet_id              = aws_default_subnet.default_az1.id
   vpc_security_group_ids = [aws_security_group.ec2_security_group.id]
-  key_name               = "april-batch"
+  key_name               = "Ohio's-key"
   user_data            = "${file("jenkins_install.sh")}"
 
   tags = {
@@ -142,7 +129,7 @@ resource "aws_instance" "ec2_instance2" {
   instance_type          = "t2.micro"
   subnet_id              = aws_default_subnet.default_az1.id
   vpc_security_group_ids = [aws_security_group.ec2_security_group.id]
-  key_name               = "april-batch"
+  key_name               = "Ohio's-key"
 
   tags = {
     Name = "Database-server"
@@ -154,7 +141,7 @@ resource "aws_instance" "ec2_instance3" {
   instance_type          = "t2.micro"
   subnet_id              = aws_default_subnet.default_az1.id
   vpc_security_group_ids = [aws_security_group.ec2_security_group.id]
-  key_name               = "april-batch"
+  key_name               = "Ohio's-key"
 
   tags = {
     Name = "Nginx-Server"
@@ -166,9 +153,33 @@ resource "aws_instance" "ec2_instance4" {
   instance_type          = "t2.micro"
   subnet_id              = aws_default_subnet.default_az1.id
   vpc_security_group_ids = [aws_security_group.ec2_security_group.id]
-  key_name               = "april-batch"
+  key_name               = "Ohio's-key"
 
   tags = {
     Name = "Apache-Server"
   }
+}
+
+# print the url of the jenkins server
+output "Jenkins_server_url" {
+  value     = join ("", ["http://", aws_instance.ec2_instance1.public_ip, ":", "8080"])
+  description = "Jenkins Server is firstinstance"
+}
+
+# print the url of the jenkins server
+output "Database_server_url" {
+  value     = join ("", ["http://", aws_instance.ec2_instance2.public_ip, ":", "3306"])
+  description = "Database-server is secondinstance"
+}
+
+# print the url of the jenkins server
+output "Nginx_server_url" {
+  value     = join ("", ["http://", aws_instance.ec2_instance3.public_ip, ":", "9090"])
+  description = "Nginx-Server is thirdinstance"
+}
+
+# print the url of the jenkins server
+output "Apache_server_url" {
+  value     = join ("", ["http://", aws_instance.ec2_instance4.public_ip, ":", "80"])
+  description = "Apache-Server is fourthinstance"
 }
