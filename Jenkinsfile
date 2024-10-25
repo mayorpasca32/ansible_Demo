@@ -9,7 +9,7 @@ pipeline{
         }
       stage("Run an ansible playbook"){
         steps{
-          ansiblePlaybook credentialsId: 'ssh-key', disableHostKeyChecking: true, inventory: 'hosts', playbook: 'ansible_playbook.yaml', vaultTmpPath: ''
+          ansiblePlaybook credentialsId: 'ssh', disableHostKeyChecking: true, inventory: 'hosts', playbook: 'ansible_playbook.yaml', vaultTmpPath: ''        
         }
       }
       stage("Print Installation Is Complete"){
