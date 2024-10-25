@@ -1,18 +1,3 @@
-- name: PlayBook 1
-  hosts: Nginx-Servers
-  become: true
-  tasks:
-    - name: Installing Nginx web server
-      apt:
-        name: nginx
-        state: latest
-    - name: start nginx and enable nginx service
-      service:
-        name: nginx
-        state: started
-        enabled: yes  # if you want to also enable nginx
-
-
 - name: PlayBook 2
   hosts: Apache-Servers
   become: true
