@@ -1,7 +1,7 @@
 # configured aws provider with proper credentials
 provider "aws" {
   region    = "us-east-2"
-  profile   = "labake"
+  profile   = "default"
 }
 
 
@@ -107,6 +107,12 @@ data "aws_ami" "ubuntu" {
     owners = ["099720109477"]
 }
 
+resource "aws_key_pair" "generated_key" {
+  key_name   = var.key_name
+  public_key = tls_private_key.self-eks.public_key_openssh
+}
+
+
 # launch the ec2 instance and install website
 
 resource "aws_instance" "ec2_instance1" {
@@ -114,7 +120,7 @@ resource "aws_instance" "ec2_instance1" {
   instance_type          = "t2.small"
   subnet_id              = aws_default_subnet.default_az1.id
   vpc_security_group_ids = [aws_security_group.ec2_security_group.id]
-  key_name               = "Ohio's-key"
+  key_name               = aws_key_pair.generated_key.key_name
   user_data            = "${file("jenkins_install.sh")}"
 
   tags = {
@@ -129,7 +135,7 @@ resource "aws_instance" "ec2_instance2" {
   instance_type          = "t2.micro"
   subnet_id              = aws_default_subnet.default_az1.id
   vpc_security_group_ids = [aws_security_group.ec2_security_group.id]
-  key_name               = "Ohio's-key"
+  key_name               = aws_key_pair.generated_key.key_name
 
   tags = {
     Name = "Database-server"
@@ -141,7 +147,7 @@ resource "aws_instance" "ec2_instance3" {
   instance_type          = "t2.micro"
   subnet_id              = aws_default_subnet.default_az1.id
   vpc_security_group_ids = [aws_security_group.ec2_security_group.id]
-  key_name               = "Ohio's-key"
+  key_name               = aws_key_pair.generated_key.key_name
 
   tags = {
     Name = "Nginx-Server"
@@ -153,7 +159,7 @@ resource "aws_instance" "ec2_instance4" {
   instance_type          = "t2.micro"
   subnet_id              = aws_default_subnet.default_az1.id
   vpc_security_group_ids = [aws_security_group.ec2_security_group.id]
-  key_name               = "Ohio's-key"
+  key_name               = aws_key_pair.generated_key.key_name
 
   tags = {
     Name = "Apache-Server"
@@ -182,4 +188,15 @@ output "Nginx_server_url" {
 output "Apache_server_url" {
   value     = join ("", ["http://", aws_instance.ec2_instance4.public_ip, ":", "80"])
   description = "Apache-Server is fourthinstance"
+}
+
+resource "tls_private_key" "self-eks" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+# Print the Private Key
+output "private_key" {
+  value     = tls_private_key.self-eks.private_key_pem
+  sensitive = true
 }
